@@ -3,9 +3,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { ICliente, INovoCliente } from '../../interfaces/cliente';
+import api from '../../config/api' // importa a api escondendo do codigo 
 
-// URL base da API 
-const API_URL = 'http://localhost:3001/clientes';
 
 
 interface ClientFormProps {
@@ -47,7 +46,7 @@ export function ClientForm({ isEdit = false }: ClientFormProps) {
             const fetchClient = async () => {
                 setIsDataLoading(true); // Inicia o loading de dados
                 try {
-                    const response = await axios.get<ICliente>(`${API_URL}/${clientId}`);
+                    const response = await api.get<ICliente>(`/clientes/${id}`);
 
                     const dataParaFormulario: INovoCliente = {
                         nomeCompleto: response.data.nomeCompleto,
@@ -110,11 +109,11 @@ export function ClientForm({ isEdit = false }: ClientFormProps) {
 
         try {
             if (isEdit && clientId) {
-                await axios.put(`${API_URL}/${clientId}`, formData);
+                await api.put(`/clientes/${clientId}`, formData);
                 toast.success("Cliente atualizado com sucesso!");
 
             } else {
-                await axios.post(API_URL, formData);
+                await api.post('/clientes', formData);
                 toast.success("Cliente cadastrado com sucesso!");
             }
             navigate('/');

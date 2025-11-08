@@ -3,8 +3,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'; 
 import type { ICliente } from '../../interfaces/cliente'; 
+import api from '../../config/api' // importa a api escondendo do codigo 
 
-const API_URL = 'http://localhost:3001/clientes';
 
 export function ListaCliente() {
     const navigate = useNavigate(); 
@@ -16,7 +16,7 @@ export function ListaCliente() {
     const fetchClientes = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get<ICliente[]>(API_URL);
+            const response = await api.get<ICliente[]>('/clientes');
             setClientes(response.data);
 
             if (response.data.length > 0) {
@@ -40,7 +40,7 @@ export function ListaCliente() {
         setDeletingId(id); 
 
         try {
-            await axios.delete(`${API_URL}/${id}`);
+            await api.delete(`/clientes/${id}`);
             setClientes(prevClientes => prevClientes.filter(c => c.id !== id));
             toast.success("Cliente excluído com sucesso!");
 
